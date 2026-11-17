@@ -1,0 +1,20 @@
+
+name: Windows Cloud Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - name: Check Windows
+        shell: powershell
+        run: |
+          Write-Host "Windows Cloud Runner Started"
+          Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion
+          Get-CimInstance Win32_ComputerSystem |
+            Select-Object Manufacturer, Model,
+            @{Name="RAM_GB";Expression={[math]::Round($_.TotalPhysicalMemory / 1GB, 2)}}
+          Get-CimInstance Win32_Processor |
+            Select-Object Name, NumberOfCores
